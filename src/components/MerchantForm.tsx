@@ -8,11 +8,11 @@ export default function MerchantForm() {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
 
-  const qrValue = JSON.stringify({
-    wallet,
-    amount,
-    description,
-  });
+  const qrValue = `paymint://pay?wallet=${encodeURIComponent(
+  wallet
+)}&amount=${encodeURIComponent(amount)}&description=${encodeURIComponent(
+  description
+)}`;
 
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
@@ -71,6 +71,9 @@ export default function MerchantForm() {
         <div className="flex justify-center rounded-xl bg-white p-6">
           <QRCodeSVG value={qrValue} size={220} />
         </div>
+        <p className="mt-4 break-all rounded-lg bg-slate-950 p-3 text-xs text-slate-400">
+  {qrValue}
+</p>
 
       </div>
     </div>
