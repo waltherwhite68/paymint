@@ -1,4 +1,19 @@
+"use client";
+
+import { useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
+
 export default function MerchantForm() {
+  const [wallet, setWallet] = useState("");
+  const [amount, setAmount] = useState("");
+  const [description, setDescription] = useState("");
+
+  const qrValue = JSON.stringify({
+    wallet,
+    amount,
+    description,
+  });
+
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
       <h3 className="mb-2 text-2xl font-bold text-white">
@@ -18,20 +33,24 @@ export default function MerchantForm() {
 
           <input
             type="text"
+            value={wallet}
+            onChange={(e) => setWallet(e.target.value)}
             placeholder="0x..."
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none"
+            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
           />
         </div>
 
         <div>
           <label className="mb-2 block text-sm text-slate-300">
-            Amount (USDC)
+            Amount
           </label>
 
           <input
             type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
             placeholder="10"
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none"
+            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
           />
         </div>
 
@@ -42,14 +61,16 @@ export default function MerchantForm() {
 
           <input
             type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Coffee"
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none"
+            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
           />
         </div>
 
-        <button className="w-full rounded-xl bg-indigo-600 py-3 font-semibold text-white hover:bg-indigo-500">
-          Generate QR
-        </button>
+        <div className="flex justify-center rounded-xl bg-white p-6">
+          <QRCodeSVG value={qrValue} size={220} />
+        </div>
 
       </div>
     </div>
