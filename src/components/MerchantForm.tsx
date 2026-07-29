@@ -2,80 +2,73 @@
 
 import { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import { useAccount } from "wagmi";
+import { createPaymentUri } from "@/lib/qr";
+import PaymentStatus from "./PaymentStatus";
 
 export default function MerchantForm() {
-  const [wallet, setWallet] = useState("");
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
+  const { address } = useAccount();
 
-  const qrValue = `paymint://pay?wallet=${encodeURIComponent(
-  wallet
-)}&amount=${encodeURIComponent(amount)}&description=${encodeURIComponent(
-  description
-)}`;
+  const [amount, setAmount] = useState("");
+  const [paid, setPaid] = useState(false);
+  const [txHash, setTxHash] = useState("");
+
+  const qrValue = createPaymentUri({
+    wallet: address ?? "",
+    amount,
+    description: "",
+  });
+
+  const handleNewPayment = () => {
+    setAmount("");
+    setPaid(false);
+    setTxHash("");
+  };
 
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-      <h3 className="mb-2 text-2xl font-bold text-white">
+      <h2 className="mb-2 text-2xl font-bold text-white">
         Merchant
-      </h3>
+      </h2>
 
       <p className="mb-6 text-slate-400">
-        Create a USDC payment request.
+        Connect your wallet and enter the payment amount.
       </p>
 
-      <div className="space-y-4">
+      <div className="rounded-xl bg-slate-950 p-3">
+        <p className="text-xs text-slate-500">
+          Merchant Wallet
+        </p>
 
-        <div>
-          <label className="mb-2 block text-sm text-slate-300">
-            Wallet Address
-          </label>
+        <p className="mt-1 break-all text-sm text-white">
+          {address ?? "Connect Wallet"}
+        </p>
+      </div>
 
-          <input
-            type="text"
-            value={wallet}
-            onChange={(e) => setWallet(e.target.value)}
-            placeholder="0x..."
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
-          />
-        </div>
-
-        <div>
-          <label className="mb-2 block text-sm text-slate-300">
-            Amount
-          </label>
-
+      {!paid && (
+        <>
           <input
             type="number"
+            placeholder="USDC Amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="10"
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
+            className="mt-4 w-full rounded-xl border border-slate-700 bg-slate-950 p-3 text-white outline-none"
           />
-        </div>
 
-        <div>
-          <label className="mb-2 block text-sm text-slate-300">
-            Description
-          </label>
+          {address && amount && (
+            <div className="mt-6 flex justify-center rounded-xl bg-white p-6">
+              <QRCodeSVG value={qrValue} size={220} />
+            </div>
+          )}
+        </>
+      )}
 
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Coffee"
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
-          />
-        </div>
-
-        <div className="flex justify-center rounded-xl bg-white p-6">
-          <QRCodeSVG value={qrValue} size={220} />
-        </div>
-        <p className="mt-4 break-all rounded-lg bg-slate-950 p-3 text-xs text-slate-400">
-  {qrValue}
-</p>
-
-      </div>
+      <PaymentStatus
+        paid={paid}
+        amount={amount}
+        txHash={txHash}
+        onNewPayment={handleNewPayment}
+      />
     </div>
   );
 }

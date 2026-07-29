@@ -1,9 +1,38 @@
 "use client";
 
-type Props = {
-  children: React.ReactNode;
-};
+import "@rainbow-me/rainbowkit/styles.css";
 
-export default function Web3Provider({ children }: Props) {
-  return <>{children}</>;
+import { ReactNode } from "react";
+
+import {
+  RainbowKitProvider,
+} from "@rainbow-me/rainbowkit";
+
+import {
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+
+import {
+  WagmiProvider,
+} from "wagmi";
+
+import { config } from "@/lib/wagmi";
+
+const queryClient = new QueryClient();
+
+export default function Web3Provider({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider>
+          {children}
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
 }
