@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useAccount, useWalletClient } from "wagmi";
+import {
+  useAccount,
+  useWalletClient,
+  usePublicClient,
+} from "wagmi";
 import { createPaymentTransaction } from "@/lib/transfer";
 import { usePaymentContext } from "@/providers/PaymentProvider";
 
@@ -16,6 +20,7 @@ export default function PaymentButton({
 }: PaymentButtonProps) {
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
+  const publicClient = usePublicClient();
   const { setPayment } = usePaymentContext();
 
   const [loading, setLoading] = useState(false);
@@ -37,6 +42,10 @@ export default function PaymentButton({
 
       const txHash = await walletClient.sendTransaction(tx);
 
+      await publicClient.waitForTransactionReceipt({
+        hash: txHash,
+      });
+
       setHash(txHash);
 
       setPayment({
@@ -55,54 +64,25 @@ export default function PaymentButton({
 
   if (hash) {
     return (
-      <div className="mt-6 rounded-2xl border border-emerald-600 bg-emerald-950 p-5">
-        <div className="flex items-center gap-2">
-          <div className="text-2xl">✅</div>
+      <div className="mt-6 rounded-2xl border border-emerald-600 bg-emerald-950 p-6 text-center">
+        <div className="text-5xl">✅</div>
 
-          <div>
-            <h3 className="text-lg font-bold text-emerald-400">
-              Payment Successful
-            </h3>
+        <h3 className="mt-4 text-2xl font-bold text-emerald-400">
+          Payment Completed
+        </h3>
 
-            <p className="text-sm text-emerald-200">
-              USDC payment completed successfully.
-            </p>
-          </div>
-        </div>
+        <p className="mt-2 text-slate-300">
+          You can safely close this page.
+        </p>
 
-        <div className="mt-6 space-y-4">
-          <div>
-            <p className="text-xs text-slate-400">Amount</p>
-            <p className="text-xl font-bold text-white">
-              {amount} USDC
-            </p>
-          </div>
-
-          <div>
-            <p className="text-xs text-slate-400">Merchant</p>
-            <p className="break-all text-xs text-white">
-              {wallet}
-            </p>
-          </div>
-
-          <div>
-            <p className="text-xs text-slate-400">
-              Transaction Hash
-            </p>
-            <p className="break-all text-xs text-white">
-              {hash}
-            </p>
-          </div>
-
-          <a
-            href={`https://explorer.testnet.arc.network/tx/${hash}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block rounded-xl bg-blue-600 py-3 text-center font-semibold text-white hover:bg-blue-500"
-          >
-            View on Explorer
-          </a>
-        </div>
+        <a
+          href={`https://explorer.testnet.arc.network/tx/${hash}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-6 block rounded-xl bg-blue-600 py-3 text-center font-semibold text-white hover:bg-blue-500"
+        >
+          View Transaction
+        </a>
       </div>
     );
   }
@@ -113,7 +93,7 @@ export default function PaymentButton({
       disabled={!isConnected || loading}
       className="mt-6 w-full rounded-xl bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
     >
-      {loading ? "Processing Payment..." : "Pay with USDC"}
+      {loading ? "Processing Payment..." : `Pay ${amount} USDC`}
     </button>
   );
 }
