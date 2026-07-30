@@ -3,9 +3,7 @@ export interface PaymentData {
   amount: string;
 }
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_APP_URL ??
-  "http://localhost:3000";
+const BASE_URL = "https://paymintpos.netlify.app";
 
 export function createPaymentUri(data: PaymentData) {
   const params = new URLSearchParams({
