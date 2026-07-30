@@ -42,9 +42,13 @@ export default function PaymentButton({
 
       const txHash = await walletClient.sendTransaction(tx);
 
-      await publicClient.waitForTransactionReceipt({
-        hash: txHash,
-      });
+if (!publicClient) {
+  throw new Error("Public client not available");
+}
+
+await publicClient.waitForTransactionReceipt({
+  hash: txHash,
+});
 
       setHash(txHash);
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { useAccount, useWatchContractEvent } from "wagmi";
 import { formatUnits } from "viem";
+import { useAccount, useWatchContractEvent } from "wagmi";
 
 import { USDC, usdcAbi } from "@/constants/usdc";
 import { usePaymentContext } from "@/providers/PaymentProvider";
@@ -11,7 +11,7 @@ export default function PaymentListener() {
   const { address } = useAccount();
   const { setPayment } = usePaymentContext();
 
-  const lastTx = useRef<string>();
+  const lastTx = useRef<string | null>(null);
 
   useWatchContractEvent({
     address: USDC.address,
@@ -35,7 +35,7 @@ export default function PaymentListener() {
           continue;
         }
 
-        lastTx.current = log.transactionHash;
+        lastTx.current = log.transactionHash ?? null;
 
         setPayment({
           paid: true,
