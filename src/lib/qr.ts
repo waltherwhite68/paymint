@@ -1,28 +1,21 @@
-export interface PaymentData {
+const DAPP_URL =
+  process.env.NEXT_PUBLIC_APP_URL ??
+  "http://localhost:3000";
+
+type PaymentData = {
   wallet: string;
   amount: string;
-}
+};
 
-const BASE_URL = "https://paymintpos.netlify.app";
+export function createPaymentUri({
+  wallet,
+  amount,
+}: PaymentData) {
+  const paymentUrl = `${DAPP_URL}/pay?to=${encodeURIComponent(
+    wallet
+  )}&amount=${encodeURIComponent(amount)}`;
 
-export function createPaymentUri(data: PaymentData) {
-  const params = new URLSearchParams({
-    to: data.wallet,
-    amount: data.amount,
-  });
+  const cleanUrl = paymentUrl.replace(/^https?:\/\//, "");
 
-  return `${BASE_URL}/pay?${params.toString()}`;
-}
-
-export function parsePaymentUri(value: string): PaymentData | null {
-  try {
-    const url = new URL(value);
-
-    return {
-      wallet: url.searchParams.get("to") ?? "",
-      amount: url.searchParams.get("amount") ?? "",
-    };
-  } catch {
-    return null;
-  }
+  return `https://link.metamask.io/dapp/${cleanUrl}`;
 }
