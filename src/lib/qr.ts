@@ -11,7 +11,7 @@ export function createPaymentUri({
   wallet,
   amount,
 }: PaymentData) {
-  const paymentUrl = `${DAPP_URL}/pay?to=${encodeURIComponent(
+  const paymentUrl = `https://AAAAATEST123.netlify.app/pay?to=${encodeURIComponent(
     wallet
   )}&amount=${encodeURIComponent(amount)}`;
 
