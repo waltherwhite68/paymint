@@ -69,6 +69,16 @@ export default function MerchantForm() {
           <p className="mt-4 text-center text-sm text-slate-400">
             Customer scans this QR code to pay with USDC.
           </p>
+
+          <div className="mt-6 rounded-xl border border-slate-700 bg-slate-950 p-4">
+            <p className="text-xs text-slate-500">
+              Generated QR URL
+            </p>
+
+            <p className="mt-2 break-all text-xs text-white">
+              {qrValue}
+            </p>
+          </div>
         </div>
       )}
     </div>
