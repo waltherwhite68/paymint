@@ -1,3 +1,4 @@
+import ConnectWallet from "@/components/ConnectWallet";
 import PaymentButton from "@/components/PaymentButton";
 
 interface PayPageProps {
@@ -33,9 +34,35 @@ export default async function PayPage({
 
   return (
     <main className="mx-auto max-w-xl p-6">
-      <h1 className="mb-6 text-3xl font-bold">
+      <h1 className="text-3xl font-bold">
         Complete Payment
       </h1>
+
+      <p className="mt-2 text-slate-400">
+        Connect your wallet and confirm the USDC payment.
+      </p>
+
+      <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+        <p className="text-sm text-slate-400">
+          Merchant Wallet
+        </p>
+
+        <p className="mt-2 break-all text-white">
+          {wallet}
+        </p>
+
+        <p className="mt-6 text-sm text-slate-400">
+          Amount
+        </p>
+
+        <p className="text-3xl font-bold text-white">
+          {amount} USDC
+        </p>
+      </div>
+
+      <div className="mt-8 flex justify-center">
+        <ConnectWallet />
+      </div>
 
       <PaymentButton
         wallet={wallet}
