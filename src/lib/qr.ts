@@ -1,6 +1,4 @@
-const DAPP_URL =
-  process.env.NEXT_PUBLIC_APP_URL ??
-  "http://localhost:3000";
+const DAPP_URL = "https://paymintpos.netlify.app";
 
 type PaymentData = {
   wallet: string;
