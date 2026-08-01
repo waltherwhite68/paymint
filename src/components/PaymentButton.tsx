@@ -18,7 +18,7 @@ export default function PaymentButton({
   wallet,
   amount,
 }: PaymentButtonProps) {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
   const { setPayment } = usePaymentContext();
@@ -27,6 +27,13 @@ export default function PaymentButton({
   const [hash, setHash] = useState("");
 
   const handlePayment = async () => {
+    console.log("========== PAYMENT DEBUG ==========");
+    console.log("Connected:", isConnected);
+    console.log("Address:", address);
+    console.log("WalletClient:", walletClient);
+    console.log("PublicClient:", publicClient);
+    console.log("==================================");
+
     if (!walletClient) {
       alert("Please connect your wallet.");
       return;
@@ -42,13 +49,13 @@ export default function PaymentButton({
 
       const txHash = await walletClient.sendTransaction(tx);
 
-if (!publicClient) {
-  throw new Error("Public client not available");
-}
+      if (!publicClient) {
+        throw new Error("Public client not available");
+      }
 
-await publicClient.waitForTransactionReceipt({
-  hash: txHash,
-});
+      await publicClient.waitForTransactionReceipt({
+        hash: txHash,
+      });
 
       setHash(txHash);
 
@@ -80,7 +87,7 @@ await publicClient.waitForTransactionReceipt({
         </p>
 
         <a
-          href={`https://explorer.testnet.arc.network/tx/${hash}`}
+          href={`https://testnet.arcscan.app/tx/${hash}`}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-6 block rounded-xl bg-blue-600 py-3 text-center font-semibold text-white hover:bg-blue-500"
