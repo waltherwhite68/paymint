@@ -37,7 +37,9 @@ export default function Receipt() {
 
       <div className="mt-8 space-y-5">
         <div>
-          <p className="text-xs text-slate-400">Amount</p>
+          <p className="text-xs text-slate-400">
+            Amount
+          </p>
 
           <p className="text-2xl font-bold text-white">
             {payment.amount} USDC
@@ -49,8 +51,8 @@ export default function Receipt() {
             Merchant Wallet
           </p>
 
-          <p className="break-all text-sm text-white">
-            {payment.wallet}
+          <p className="text-sm text-white">
+            {`${payment.wallet.slice(0, 6)}...${payment.wallet.slice(-4)}`}
           </p>
         </div>
 
@@ -65,7 +67,7 @@ export default function Receipt() {
         </div>
 
         <a
-          href={`https://explorer.testnet.arc.network/tx/${payment.txHash}`}
+          href={`https://testnet.arcscan.app/tx/${payment.txHash}`}
           target="_blank"
           rel="noopener noreferrer"
           className="block rounded-xl bg-blue-600 py-3 text-center font-semibold text-white hover:bg-blue-500"
