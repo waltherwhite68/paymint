@@ -2,12 +2,12 @@ import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { http } from "wagmi";
 
 const arcTestnet = {
-  id: 193939,
+  id: 5042002,
   name: "Arc Testnet",
   nativeCurrency: {
-    decimals: 18,
-    name: "ARC",
-    symbol: "ARC",
+    decimals: 6,
+    name: "USDC",
+    symbol: "USDC",
   },
   rpcUrls: {
     default: {
@@ -16,8 +16,8 @@ const arcTestnet = {
   },
   blockExplorers: {
     default: {
-      name: "Arc Explorer",
-      url: "https://explorer.testnet.arc.network",
+      name: "ArcScan",
+      url: "https://testnet.arcscan.app",
     },
   },
   testnet: true,
@@ -29,6 +29,6 @@ export const config = getDefaultConfig({
   chains: [arcTestnet],
   ssr: true,
   transports: {
-    [arcTestnet.id]: http(),
+    [arcTestnet.id]: http("https://rpc.testnet.arc.network"),
   },
 });
